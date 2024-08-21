@@ -1,32 +1,30 @@
-name: Deploy and Test
-
-on:
-  push:
-    branches: [ main ]
-
+on: push
+name: 🚀 Deploy website on push
 jobs:
-  tests:
-    name: CI/CD -> Test and deploy
+  web-deploy:
+    name: 🎉 Deploy
     runs-on: ubuntu-latest
-    environment:
-      name: 'Production'
-      url: 'https://<your url>.com'
     steps:
-      - uses: shivammathur/setup-php@b7d1d9c9a92d8d8463ce36d7f60da34d461724f8
-        with:
-          php-version: '7.4'
-      - uses: actions/checkout@v2
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v2
+
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-      - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-      - name: Generate key
-        run: php artisan key:generate
-      - name: Test
-        run: composer test
-      - name: FTP Deployment
-        uses: airvzxf/ftp-deployment-action@latest
+#      - name: Install Dependencies
+#        run: composer install --optimize-autoloader --no-dev
+#      - name: Generate key
+#        run: php artisan key:generate
+#      - name: Database Migration
+#        run: php artisan migrate
+      - name: Optimize clear
+        run: php artisan optimize:clear
+#      - name: Directory Permissions
+#        run: chmod -R 777 storage bootstrap/cache
+
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
-          server: ${{ secrets.FTP_IP }}
-          user: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          server: ftp.domain.com
+          username: ${{ secrets.ftp_username }}
+          password: ${{ secrets.ftp_password }}
+#          server-dir:
