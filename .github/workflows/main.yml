@@ -7,5 +7,5 @@ jobs:
     steps:
       - name: 🚚 Get latest code
         run: echo "hello world"
-      - name: 🚚 Get latest code
+      - name: 🚚 Get latest code1
         run: echo "hello w"
